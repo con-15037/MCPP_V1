@@ -432,6 +432,7 @@ html, body {
 
 .pair + .pair { margin-top: 6px; }
 .pair--split { margin-top: 14px; }
+.panel-head--sub { margin-top: 14px; }
 .hint b { font-weight: 600; color: var(--ink); }
 
 /* ── align mode toggle ────────────────────────────── */

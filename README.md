@@ -14,8 +14,9 @@ build step and no framework. It runs in desktop PowerPoint for Mac (confirmed on
 | Section | What it does |
 |---|---|
 | **Page** | Sets margins and gutters. Each has a link/unlink chain toggle. |
-| **Align** | Aligns the selection to the page margins or to the selection's own bounds. |
-| **Arrange** | Space horizontal, Space vertical, Fill horizontal, Fill vertical. |
+| **Align** | Aligns the selection to the page (inside the margins) or to the selection's own bounds. |
+| **Space** | Even gaps between shapes without resizing them, across the page or across the selection. |
+| **Fill to gutters** | Resizes shapes to fill the page or the selection, with the gutter between them. |
 | **Position** | Live X, Y, W, H readout. Fields accept arithmetic. Position and size can be copied and pasted. |
 | **Corner radius** | Applies S, M or L (15, 30 or 60 px) with an Apply button. |
 | **Inset** | Nudges a shape inward from the top, left, right or bottom. |
@@ -206,7 +207,7 @@ re-solve.
 
 ### Align
 
-The toggle in the Align header switches the reference frame. **Margins** aligns every
+The toggle in the Align header switches the reference frame. **Page** aligns every
 selected shape to the page margins. **Selection** aligns them to the bounding box of the
 selection, which needs at least two shapes.
 
@@ -234,16 +235,23 @@ and pressing Enter applies just that one value to the whole selection. Fields ac
 arithmetic (`43+30`, `*2`, `(40+8)*2`). A leading operator applies to the field's current
 value, so `-30` subtracts; for an absolute negative position type `0-30`.
 
-### Fill and Space
+### Space
 
-**Fill horizontal / vertical** span the page margins. Horizontal sets widths and
-x-positions only; vertical sets heights and y-positions only. They work with a single
-shape, which simply stretches to the margins.
+Each of Space and Fill has its own Page / Selection toggle.
 
-**Space horizontal / vertical** work inside the selection's own extent instead. The outer
-edges stay put, and the shapes are resized so every gap equals the gutter for that axis.
+**Space horizontal / vertical** only move shapes and never resize them, so every gap is
+equal. In **Selection** mode the first and last shapes stay put and the ones between are
+spread evenly (at least three shapes). In **Page** mode the page margins act as the outer
+points, so the gap before the first shape and after the last equals the gaps between.
 
-All four re-solve the corner radius afterwards.
+### Fill to gutters
+
+**Fill horizontal / vertical** resize the shapes so they fill a span, with the gutter for
+that axis between each. In **Page** mode the span is the area inside the margins, and a
+single shape simply stretches to it. In **Selection** mode the span is the selection's own
+extent: the outer edges stay put (at least two shapes). Horizontal sets widths and
+x-positions only; vertical sets heights and y-positions only. Fill re-solves the corner
+radius afterwards.
 
 ---
 

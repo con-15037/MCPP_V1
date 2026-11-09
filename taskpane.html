@@ -54,8 +54,8 @@
     <div class="panel-head">
       <h2 class="eyebrow">Align</h2>
       <div class="seg">
-        <button type="button" class="seg__btn seg__btn--on" data-alignmode="margins">Margins</button>
-        <button type="button" class="seg__btn" data-alignmode="selection">Selection</button>
+        <button type="button" class="seg__btn seg__btn--on" data-mode-group="align" data-mode="page">Page</button>
+        <button type="button" class="seg__btn" data-mode-group="align" data-mode="selection">Selection</button>
       </div>
     </div>
     <div class="align-grid">
@@ -87,9 +87,15 @@
   </section>
 
   <section class="panel">
-    <h2 class="eyebrow">Arrange</h2>
+    <div class="panel-head">
+      <h2 class="eyebrow">Space</h2>
+      <div class="seg">
+        <button type="button" class="seg__btn seg__btn--on" data-mode-group="space" data-mode="page">Page</button>
+        <button type="button" class="seg__btn" data-mode-group="space" data-mode="selection">Selection</button>
+      </div>
+    </div>
     <div class="pair">
-      <button type="button" id="spaceRow" class="op" title="Hold the outer edges, set every gap to the horizontal gutter">
+      <button type="button" id="spaceRow" class="op" title="Even gaps left to right. Shapes keep their size.">
         <svg viewBox="0 0 24 24">
           <rect class="box" x="1.5" y="7" width="5.5" height="10" rx="1.5"/>
           <rect class="box" x="9.25" y="7" width="5.5" height="10" rx="1.5"/>
@@ -98,7 +104,7 @@
         </svg>
         <span>Space<br>horizontal</span>
       </button>
-      <button type="button" id="spaceCol" class="op" title="Hold the outer edges, set every gap to the vertical gutter">
+      <button type="button" id="spaceCol" class="op" title="Even gaps top to bottom. Shapes keep their size.">
         <svg viewBox="0 0 24 24">
           <rect class="box" x="7" y="1.5" width="10" height="5.5" rx="1.5"/>
           <rect class="box" x="7" y="9.25" width="10" height="5.5" rx="1.5"/>
@@ -108,8 +114,16 @@
         <span>Space<br>vertical</span>
       </button>
     </div>
-    <div class="pair pair--split">
-      <button type="button" id="fillRow" class="op" title="Span the left and right page margins">
+
+    <div class="panel-head panel-head--sub">
+      <h2 class="eyebrow">Fill to gutters</h2>
+      <div class="seg">
+        <button type="button" class="seg__btn seg__btn--on" data-mode-group="fill" data-mode="page">Page</button>
+        <button type="button" class="seg__btn" data-mode-group="fill" data-mode="selection">Selection</button>
+      </div>
+    </div>
+    <div class="pair">
+      <button type="button" id="fillRow" class="op" title="Resize across the width, with the horizontal gutter between shapes">
         <svg viewBox="0 0 24 24">
           <path class="rule" d="M1.5 3v18M22.5 3v18"/>
           <rect class="box" x="4.5" y="7" width="6" height="10" rx="1.5"/>
@@ -118,7 +132,7 @@
         </svg>
         <span>Fill<br>horizontal</span>
       </button>
-      <button type="button" id="fillCol" class="op" title="Span the top and bottom page margins">
+      <button type="button" id="fillCol" class="op" title="Resize across the height, with the vertical gutter between shapes">
         <svg viewBox="0 0 24 24">
           <path class="rule" d="M3 1.5h18M3 22.5h18"/>
           <rect class="box" x="7" y="4.5" width="10" height="6" rx="1.5"/>

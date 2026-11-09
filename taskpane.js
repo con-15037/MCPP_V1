@@ -290,7 +290,8 @@ async function rebuildAsRounded(id, radiusPx) {
 
 /* ── 2. align ───────────────────────────────────────────────── */
 
-let ALIGN_TO = 'margins';   // or 'selection'
+/** Where each tool works: 'page' (inside the margins) or 'selection'. */
+const MODE = { align: 'page', space: 'page', fill: 'page' };
 
 /** Bounding box of a set of shapes, in points. */
 function selectionBox(items) {
@@ -307,7 +308,7 @@ async function align(mode) {
       const items = await selectedShapes(ctx);
       if (!items.length) throw new Error('none');
 
-      const toSelection = ALIGN_TO === 'selection';
+      const toSelection = MODE.align === 'selection';
       if (toSelection && items.length < 2) throw new Error('one');
 
       const box = toSelection ? selectionBox(items) : marginBox(readState());
@@ -323,7 +324,7 @@ async function align(mode) {
         }
       });
       await ctx.sync();
-      say(`${items.length} shape${items.length > 1 ? 's' : ''} aligned to ${toSelection ? 'the selection' : 'the margins'}.`, 'good');
+      say(`${items.length} shape${items.length > 1 ? 's' : ''} aligned to ${toSelection ? 'the selection' : 'the page'}.`, 'good');
     });
   } catch (e) {
     const m = {
@@ -374,37 +375,47 @@ async function generateGrid() {
   }
 }
 
-/* ── 4. fit selection ───────────────────────────────────────── */
+/* ── 4. fill to gutters ─────────────────────────────────────── */
 
+/* Resizes the selected shapes so they fill a span with the gutter between
+ * each. Page mode fills the area inside the margins; selection mode fills the
+ * selection's own extent (its first and last edges don't move). */
 async function fit(axis) {
   const s = readState();
-  const box = marginBox(s);
   const horizontal = axis === 'row';
   const gutter = P(horizontal ? s.gutterH : s.gutterV);
+  const toSelection = MODE.fill === 'selection';
 
   try {
     await PowerPoint.run(async ctx => {
       const items = await selectedShapes(ctx);
       if (!items.length) throw new Error('none');
+      if (toSelection && items.length < 2) throw new Error('few');
 
-      // One shape is a legitimate case: it simply spans the margins.
       const ordered = items.slice().sort((a, b) => horizontal ? a.left - b.left : a.top - b.top);
       const n = ordered.length;
-      const span = ((horizontal ? box.width : box.height) - (n - 1) * gutter) / n;
+
+      let start, extent;
+      if (toSelection) {
+        start = horizontal ? ordered[0].left : ordered[0].top;
+        const end = Math.max(...ordered.map(sh => horizontal ? sh.left + sh.width : sh.top + sh.height));
+        extent = end - start;
+      } else {
+        const box = marginBox(s);
+        start = horizontal ? box.left : box.top;
+        extent = horizontal ? box.width : box.height;
+      }
+
+      const span = (extent - (n - 1) * gutter) / n;
       if (span <= 0) throw new Error('tight');
 
       ordered.forEach((sh, i) => {
-        if (horizontal) {
-          sh.left  = box.left + i * (span + gutter);
-          sh.width = span;                       // height and top untouched
-        } else {
-          sh.top    = box.top + i * (span + gutter);
-          sh.height = span;                      // width and left untouched
-        }
+        if (horizontal) { sh.left = start + i * (span + gutter); sh.width  = span; }   // height and top untouched
+        else            { sh.top  = start + i * (span + gutter); sh.height = span; }   // width and left untouched
       });
       await ctx.sync();
 
-      // Widths changed, so the adjustment fraction now means a different
+      // Sizes changed, so the adjustment fraction now means a different
       // radius. Re-solve it. Square-cornered shapes just fall through.
       try {
         ordered.forEach(sh => {
@@ -415,59 +426,70 @@ async function fit(axis) {
         await ctx.sync();
       } catch (e) { /* some or all have square corners */ }
 
-      say(`${n} shapes fitted across the ${horizontal ? 'row' : 'column'} at ${Math.round(span / PX_TO_PT)}px.`, 'good');
+      say(`${n} shape${n > 1 ? 's' : ''} filled ${toSelection ? 'the selection' : 'the page'} at ${Math.round(span / PX_TO_PT)}px.`, 'good');
     });
   } catch (e) {
     const m = {
       none: 'Nothing selected. Pick one or more shapes.',
+      few: 'Filling the selection needs at least two shapes.',
       tight: 'Gutters leave no room for that many shapes.'
     };
-    say(m[e.message] || 'Could not fit that selection.', 'bad');
+    say(m[e.message] || 'Could not fill that selection.', 'bad');
   }
 }
 
-/* Keeps the selection's own extent on the chosen axis — the first and last
- * edges don't move — and resizes the shapes so every gap equals the gutter. */
+/* ── 4b. space evenly ───────────────────────────────────────── */
+
+/* Moves shapes only, never resizes them, so every gap is equal.
+ * Selection mode: the first and last shapes stay put and the ones between
+ * spread out evenly. Page mode: the page margins are the outer points, so the
+ * gap before the first shape and after the last equals the gaps between. */
 async function space(axis) {
-  const s = readState();
   const horizontal = axis === 'row';
-  const gutter = P(horizontal ? s.gutterH : s.gutterV);
+  const toSelection = MODE.space === 'selection';
 
   try {
     await PowerPoint.run(async ctx => {
       const items = await selectedShapes(ctx);
-      if (items.length < 2) throw new Error('few');
+      if (!items.length) throw new Error('none');
+      if (toSelection && items.length < 3) throw new Error('few');
 
       const ordered = items.slice().sort((a, b) => horizontal ? a.left - b.left : a.top - b.top);
       const n = ordered.length;
+      const size = sh => horizontal ? sh.width : sh.height;
 
-      const start = horizontal ? ordered[0].left : ordered[0].top;
-      const end = Math.max(...ordered.map(sh => horizontal ? sh.left + sh.width : sh.top + sh.height));
-      const extent = end - start;
+      let start, extent, gaps;
+      if (toSelection) {
+        start = horizontal ? ordered[0].left : ordered[0].top;
+        const end = Math.max(...ordered.map(sh => horizontal ? sh.left + sh.width : sh.top + sh.height));
+        extent = end - start;
+        gaps = n - 1;
+      } else {
+        const box = marginBox(readState());
+        start = horizontal ? box.left : box.top;
+        extent = horizontal ? box.width : box.height;
+        gaps = n + 1;
+      }
 
-      const span = (extent - (n - 1) * gutter) / n;
-      if (span <= 0) throw new Error('tight');
+      const total = ordered.reduce((sum, sh) => sum + size(sh), 0);
+      const gap = (extent - total) / gaps;
+      if (gap < 0) throw new Error('tight');
 
-      ordered.forEach((sh, i) => {
-        if (horizontal) { sh.left = start + i * (span + gutter); sh.width  = span; }
-        else            { sh.top  = start + i * (span + gutter); sh.height = span; }
+      let pos = toSelection ? start : start + gap;
+      ordered.forEach(sh => {
+        if (horizontal) sh.left = pos; else sh.top = pos;
+        pos += size(sh) + gap;
       });
       await ctx.sync();
 
-      try {
-        ordered.forEach(sh => {
-          const w = horizontal ? span : sh.width;
-          const h = horizontal ? sh.height : span;
-          setAdjustmentValue(sh, radiusToAdjustment(s.radius, w, h).adj);
-        });
-        await ctx.sync();
-      } catch (e) { /* square corners */ }
-
-      const g = horizontal ? s.gutterH : s.gutterV;
-      say(`${n} shapes spaced at ${g}px across ${Math.round(extent / PX_TO_PT)}px — each ${Math.round(span / PX_TO_PT)}px.`, 'good');
+      say(`${n} shape${n > 1 ? 's' : ''} spaced evenly, ${Math.round(gap / PX_TO_PT)}px apart.`, 'good');
     });
   } catch (e) {
-    const m = { few: 'Spacing needs at least two shapes. Use Fill to span the margins with one.', tight: 'That gutter is wider than the space available.' };
+    const m = {
+      none: 'Nothing selected. Pick one or more shapes.',
+      few: 'Spacing the selection needs at least three shapes.',
+      tight: 'The shapes are too big to space evenly in that area.'
+    };
     say(m[e.message] || 'Could not space that selection.', 'bad');
   }
 }
@@ -886,10 +908,11 @@ Office.onReady(info => {
   document.querySelectorAll('[data-align]').forEach(b =>
     b.addEventListener('click', () => align(b.dataset.align)));
 
-  document.querySelectorAll('[data-alignmode]').forEach(b =>
+  document.querySelectorAll('[data-mode-group]').forEach(b =>
     b.addEventListener('click', () => {
-      ALIGN_TO = b.dataset.alignmode;
-      document.querySelectorAll('[data-alignmode]').forEach(o =>
+      const group = b.dataset.modeGroup;
+      MODE[group] = b.dataset.mode;
+      document.querySelectorAll(`[data-mode-group="${group}"]`).forEach(o =>
         o.classList.toggle('seg__btn--on', o === b));
     }));
 
