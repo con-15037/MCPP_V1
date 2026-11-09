@@ -946,18 +946,26 @@ Office.onReady(info => {
   el('noStroke').addEventListener('click', removeStroke);
   el('noFill').addEventListener('click', removeFill);
 
-  // Info pop-up: hover (CSS) or click to pin open. Click elsewhere or Esc closes.
-  const infoWrap = el('insetInfoBtn').parentElement;
-  const setInfo = open => {
-    infoWrap.classList.toggle('info--open', open);
-    el('insetInfoBtn').setAttribute('aria-expanded', String(open));
-  };
-  el('insetInfoBtn').addEventListener('click', ev => {
-    ev.stopPropagation();
-    setInfo(!infoWrap.classList.contains('info--open'));
+  // Info pop-ups: hover (CSS, after a delay) or click to pin open. Only one is
+  // open at a time. Click elsewhere or Esc closes.
+  const infoBoxes = Array.from(document.querySelectorAll('.info'));
+  const closeInfo = except => infoBoxes.forEach(box => {
+    if (box === except) return;
+    box.classList.remove('info--open');
+    box.querySelector('.info__btn').setAttribute('aria-expanded', 'false');
   });
-  document.addEventListener('click', () => setInfo(false));
-  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') setInfo(false); });
+  infoBoxes.forEach(box => {
+    const btn = box.querySelector('.info__btn');
+    btn.addEventListener('click', ev => {
+      ev.stopPropagation();
+      closeInfo(box);
+      const open = !box.classList.contains('info--open');
+      box.classList.toggle('info--open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', () => closeInfo(null));
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') closeInfo(null); });
 
   document.querySelectorAll('[data-inset]').forEach(b =>
     b.addEventListener('click', () => inset(b.dataset.inset)));

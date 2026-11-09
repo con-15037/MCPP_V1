@@ -548,8 +548,8 @@ html, body {
 .info { position: relative; }
 
 .info__btn {
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
   padding: 0;
   display: grid;
   place-items: center;
@@ -558,12 +558,12 @@ html, body {
   background: none;
   color: var(--ink-35);
   font-family: var(--mono);
-  font-size: 9.5px;
+  font-size: 8px;
   font-weight: 500;
   line-height: 1;
   cursor: pointer;
 }
-.info__btn:hover, .info--open .info__btn { color: var(--ink); border-color: var(--ink-35); }
+.info__btn:hover, .info--open .info__btn { color: var(--ink-60); border-color: var(--ink-35); }
 .info__btn:focus-visible { outline: 2px solid var(--deep); outline-offset: 1px; }
 
 .info__pop {
@@ -571,7 +571,7 @@ html, body {
   top: calc(100% + 6px);
   right: 0;
   z-index: 5;
-  width: 190px;
+  width: 220px;
   margin: 0;
   padding: 8px 10px;
   border: 1px solid var(--line);
@@ -586,7 +586,7 @@ html, body {
   pointer-events: none;
   transition: opacity .12s;
 }
-/* Hover waits a beat so it doesn't flash as the cursor passes. */
-.info:hover .info__pop { opacity: 1; visibility: visible; transition-delay: .4s; }
+/* Hover waits so it doesn't flash as the cursor passes. */
+.info:hover .info__pop { opacity: 1; visibility: visible; transition-delay: .9s; }
 .info__btn:focus-visible + .info__pop,
 .info--open .info__pop { opacity: 1; visibility: visible; transition-delay: 0s; }

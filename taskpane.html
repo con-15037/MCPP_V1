@@ -28,7 +28,13 @@
   </header>
 
   <section class="panel">
-    <h2 class="eyebrow">Page</h2>
+    <div class="panel-head">
+      <h2 class="eyebrow">Page</h2>
+      <div class="info">
+        <button type="button" class="info__btn" aria-label="About page" aria-expanded="false" aria-describedby="pageInfo">i</button>
+        <p class="info__pop" id="pageInfo" role="tooltip">Margins set the live area that Page mode uses in Align, Space and Fill, and that Generate boxes draws inside. Gutters are the gaps Fill and Generate boxes leave between shapes. The chain links keep values equal.</p>
+      </div>
+    </div>
     <div class="field-row">
       <span class="field-row__key">Margin</span>
       <label class="num"><input type="number" id="mTop" value="60" min="0" step="1"><span class="num__tag">T</span></label>
@@ -145,7 +151,13 @@
   </section>
 
   <section class="panel">
-    <h2 class="eyebrow">Position <em id="selCount"></em></h2>
+    <div class="panel-head">
+      <h2 class="eyebrow">Position <em id="selCount"></em></h2>
+      <div class="info">
+        <button type="button" class="info__btn" aria-label="About position" aria-expanded="false" aria-describedby="positionInfo">i</button>
+        <p class="info__pop" id="positionInfo" role="tooltip">Live X, Y, W and H of the selection, in px. Type in any field and press Enter to apply it. Fields accept sums like 43+30, or *2 to scale. Copy, then paste position or size onto other shapes.</p>
+      </div>
+    </div>
     <div class="field-row">
       <span class="field-row__key">Origin</span>
       <label class="num"><input type="text" inputmode="text" id="posX" placeholder="—" autocomplete="off" spellcheck="false"><span class="num__tag">X</span></label>
@@ -185,7 +197,7 @@
     <div class="panel-head">
       <h2 class="eyebrow">Inset</h2>
       <div class="info">
-        <button type="button" class="info__btn" id="insetInfoBtn" aria-label="About inset" aria-expanded="false" aria-describedby="insetInfo">i</button>
+        <button type="button" class="info__btn" aria-label="About inset" aria-expanded="false" aria-describedby="insetInfo">i</button>
         <p class="info__pop" id="insetInfo" role="tooltip">Moves the selection in from that side. Negative values move it out.</p>
       </div>
     </div>
@@ -220,7 +232,13 @@
   </section>
 
   <section class="panel">
-    <h2 class="eyebrow">Generate boxes</h2>
+    <div class="panel-head">
+      <h2 class="eyebrow">Generate boxes</h2>
+      <div class="info">
+        <button type="button" class="info__btn" aria-label="About generate boxes" aria-expanded="false" aria-describedby="boxesInfo">i</button>
+        <p class="info__pop" id="boxesInfo" role="tooltip">Draws a grid of loose rounded boxes inside the margins, using the gutters, corner radius and fill. Insert footer adds two text boxes in the bottom margin, leaving room for PowerPoint's own slide number.</p>
+      </div>
+    </div>
     <div class="field-row">
       <span class="field-row__key">Grid</span>
       <label class="num"><input type="number" id="cols" value="3" min="1" max="24" step="1"><span class="num__tag">col</span></label>
