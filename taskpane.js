@@ -735,6 +735,20 @@ async function setTransparency(pct) {
   say(msg, refused ? 'bad' : 'good');
 }
 
+async function removeFill() {
+  try {
+    await PowerPoint.run(async ctx => {
+      const items = await selectedShapes(ctx);
+      if (!items.length) throw new Error('none');
+      items.forEach(sh => { try { sh.fill.clear(); } catch (e) {} });
+      await ctx.sync();
+      say(`Fill removed from ${items.length} shape${items.length === 1 ? '' : 's'}.`, 'good');
+    });
+  } catch (e) {
+    say(e.message === 'none' ? 'Nothing selected. Pick one or more shapes.' : 'Could not remove the fill.', 'bad');
+  }
+}
+
 async function removeStroke() {
   try {
     await PowerPoint.run(async ctx => {
@@ -930,6 +944,20 @@ Office.onReady(info => {
   el('alpha').addEventListener('change', () => setTransparency(parseInt(el('alpha').value, 10)));
 
   el('noStroke').addEventListener('click', removeStroke);
+  el('noFill').addEventListener('click', removeFill);
+
+  // Info pop-up: hover (CSS) or click to pin open. Click elsewhere or Esc closes.
+  const infoWrap = el('insetInfoBtn').parentElement;
+  const setInfo = open => {
+    infoWrap.classList.toggle('info--open', open);
+    el('insetInfoBtn').setAttribute('aria-expanded', String(open));
+  };
+  el('insetInfoBtn').addEventListener('click', ev => {
+    ev.stopPropagation();
+    setInfo(!infoWrap.classList.contains('info--open'));
+  });
+  document.addEventListener('click', () => setInfo(false));
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape') setInfo(false); });
 
   document.querySelectorAll('[data-inset]').forEach(b =>
     b.addEventListener('click', () => inset(b.dataset.inset)));

@@ -182,7 +182,13 @@
   </section>
 
   <section class="panel">
-    <h2 class="eyebrow">Inset</h2>
+    <div class="panel-head">
+      <h2 class="eyebrow">Inset</h2>
+      <div class="info">
+        <button type="button" class="info__btn" id="insetInfoBtn" aria-label="About inset" aria-expanded="false" aria-describedby="insetInfo">i</button>
+        <p class="info__pop" id="insetInfo" role="tooltip">Moves the selection in from that side. Negative values move it out.</p>
+      </div>
+    </div>
     <div class="field-row">
       <label class="num num--wide"><input type="number" id="insetAmt" value="15" step="1"><span class="num__tag">px</span></label>
       <div class="steps">
@@ -192,7 +198,6 @@
         <button type="button" class="step" data-inset="bottom" title="Move up, away from the bottom"><b>B</b></button>
       </div>
     </div>
-    <p class="hint">Moves the selection in from that side. Negative values move it out.</p>
   </section>
 
   <section class="panel">
@@ -208,7 +213,10 @@
       <input type="range" id="alpha" class="range" min="0" max="100" step="1" value="0">
       <span class="range__val" id="alphaVal">0%</span>
     </div>
-    <button type="button" id="noStroke" class="action action--quiet action--spaced">Remove stroke</button>
+    <div class="pair pair--spaced">
+      <button type="button" id="noStroke" class="action action--quiet">Remove stroke</button>
+      <button type="button" id="noFill" class="action action--quiet">Remove fill</button>
+    </div>
   </section>
 
   <section class="panel">

@@ -166,7 +166,7 @@ skipped, not touched.
 
 The swatches apply a solid fill to the selection. The **Alpha** slider sets fill
 transparency; it writes on release, not while dragging, so a drag is one document write
-rather than a hundred. **Remove stroke** hides the outline.
+rather than a hundred. **Remove stroke** hides the outline and **Remove fill** clears the fill.
 
 Colour and transparency are independent: clicking a swatch doesn't reset alpha, and moving
 the slider doesn't change colour. The slider is a control, not a readout. It doesn't
