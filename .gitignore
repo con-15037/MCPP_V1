@@ -1,0 +1,13 @@
+# Secrets: never commit these. Anything the panel loads is public.
+.env
+.env.*
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>2861d21a-3ff8-44e8-9932-4c418b835892</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>MCPP_V1</ProviderName>
+  <DefaultLocale>en-GB</DefaultLocale>
+  <DisplayName DefaultValue="MCPP_V1"/>
+  <Description DefaultValue="Layout tools for slides: margins, alignment, spacing, corner radius and grids."/>
+
+  <!-- ===== All URLs in this file point at the live site. There are 9 in total:
+       3 in this block, 1 task pane page, 3 icon URLs and 2 more further down. ===== -->
+  <IconUrl DefaultValue="https://mcppv1.netlify.app/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://mcppv1.netlify.app/assets/icon-80.png"/>
+  <SupportUrl DefaultValue="https://mcppv1.netlify.app/"/>
+
+  <Hosts>
+    <Host Name="Presentation"/>
+  </Hosts>
+
+  <!-- Deliberately low. The 1.10 corner-radius API is checked at runtime instead,
+       so the add-in still loads (and everything else still works) on older builds. -->
+  <Requirements>
+    <Sets DefaultMinVersion="1.3">
+      <Set Name="PowerPointApi" MinVersion="1.3"/>
+    </Sets>
+  </Requirements>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://mcppv1.netlify.app/taskpane.html"/>
+  </DefaultSettings>
+
+  <!-- ReadWriteDocument lets the panel read and change the open deck. Whoever controls
+       the hosted files controls code that runs against that deck. -->
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Presentation">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="GetStarted.Title"/>
+            <Description resid="GetStarted.Description"/>
+            <LearnMoreUrl resid="Url.Support"/>
+          </GetStarted>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="LayoutGroup">
+                <Label resid="Group.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16"/>
+                  <bt:Image size="32" resid="Icon.32"/>
+                  <bt:Image size="80" resid="Icon.80"/>
+                </Icon>
+                <Control xsi:type="Button" id="LayoutOpenPane">
+                  <Label resid="Button.Label"/>
+                  <Supertip>
+                    <Title resid="Button.Label"/>
+                    <Description resid="Button.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16"/>
+                    <bt:Image size="32" resid="Icon.32"/>
+                    <bt:Image size="80" resid="Icon.80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Url.Taskpane"/>
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16" DefaultValue="https://mcppv1.netlify.app/assets/icon-16.png"/>
+        <bt:Image id="Icon.32" DefaultValue="https://mcppv1.netlify.app/assets/icon-32.png"/>
+        <bt:Image id="Icon.80" DefaultValue="https://mcppv1.netlify.app/assets/icon-80.png"/>
+      </bt:Images>
+      <bt:Urls>
+        <!-- ===== ...and in these 2 ===== -->
+        <bt:Url id="Url.Taskpane" DefaultValue="https://mcppv1.netlify.app/taskpane.html"/>
+        <bt:Url id="Url.Support" DefaultValue="https://mcppv1.netlify.app/"/>
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="Group.Label" DefaultValue="MCPP_V1"/>
+        <bt:String id="Button.Label" DefaultValue="Layout"/>
+        <bt:String id="GetStarted.Title" DefaultValue="MCPP_V1 is ready."/>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="Button.Tooltip" DefaultValue="Open the layout panel: margins, corner radius, grids and distribution."/>
+        <bt:String id="GetStarted.Description" DefaultValue="Open the Layout panel from the Home tab to set margins, corner radius and generate grids."/>
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

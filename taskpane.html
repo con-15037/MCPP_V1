@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layout panel</title>
+  <link rel="stylesheet" href="taskpane.css">
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="i-chain">
+    <path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5"/>
+    <path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5"/>
+  </g>
+</defs></svg>
+
+<div id="unsupported" class="notice" hidden>
+  This panel needs PowerPoint on the desktop. Open a presentation and try again.
+</div>
+
+<main id="app" hidden>
+
+  <header class="masthead">
+    <span class="masthead__name" id="appName"></span>
+    <span class="masthead__canvas">1920&times;1080</span>
+  </header>
+
+  <section class="panel">
+    <h2 class="eyebrow">Page</h2>
+    <div class="field-row">
+      <span class="field-row__key">Margin</span>
+      <label class="num"><input type="number" id="mTop" value="60" min="0" step="1"><span class="num__tag">T</span></label>
+      <label class="num"><input type="number" id="mRight" value="60" min="0" step="1"><span class="num__tag">R</span></label>
+      <label class="num"><input type="number" id="mBottom" value="80" min="0" step="1"><span class="num__tag">B</span></label>
+      <label class="num"><input type="number" id="mLeft" value="60" min="0" step="1"><span class="num__tag">L</span></label>
+      <button type="button" id="linkMargins" class="link" aria-pressed="false" title="Keep all four margins equal">
+        <svg viewBox="0 0 24 24"><use href="#i-chain"/></svg>
+      </button>
+    </div>
+    <div class="field-row">
+      <span class="field-row__key">Gutter</span>
+      <label class="num"><input type="number" id="gutterH" value="30" min="0" step="1"><span class="num__tag">H</span></label>
+      <label class="num"><input type="number" id="gutterV" value="30" min="0" step="1"><span class="num__tag">V</span></label>
+      <span class="spacer"></span>
+      <button type="button" id="linkGutters" class="link link--on" aria-pressed="true" title="Keep horizontal and vertical gutters equal">
+        <svg viewBox="0 0 24 24"><use href="#i-chain"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2 class="eyebrow">Align</h2>
+      <div class="seg">
+        <button type="button" class="seg__btn seg__btn--on" data-alignmode="margins">Margins</button>
+        <button type="button" class="seg__btn" data-alignmode="selection">Selection</button>
+      </div>
+    </div>
+    <div class="align-grid">
+      <button type="button" class="tile" data-align="left" title="Align left edges">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M3 4v16"/><rect class="box" x="6" y="7" width="12" height="10" rx="2"/></svg>
+        <span>Left</span>
+      </button>
+      <button type="button" class="tile" data-align="centerH" title="Centre horizontally">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M12 4v16"/><rect class="box" x="6" y="7" width="12" height="10" rx="2"/></svg>
+        <span>Centre</span>
+      </button>
+      <button type="button" class="tile" data-align="right" title="Align right edges">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M21 4v16"/><rect class="box" x="6" y="7" width="12" height="10" rx="2"/></svg>
+        <span>Right</span>
+      </button>
+      <button type="button" class="tile" data-align="top" title="Align top edges">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M4 3h16"/><rect class="box" x="7" y="6" width="10" height="12" rx="2"/></svg>
+        <span>Top</span>
+      </button>
+      <button type="button" class="tile" data-align="centerV" title="Centre vertically">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M4 12h16"/><rect class="box" x="7" y="6" width="10" height="12" rx="2"/></svg>
+        <span>Middle</span>
+      </button>
+      <button type="button" class="tile" data-align="bottom" title="Align bottom edges">
+        <svg viewBox="0 0 24 24"><path class="rule" d="M4 21h16"/><rect class="box" x="7" y="6" width="10" height="12" rx="2"/></svg>
+        <span>Bottom</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Arrange</h2>
+    <div class="pair">
+      <button type="button" id="spaceRow" class="op" title="Hold the outer edges, set every gap to the horizontal gutter">
+        <svg viewBox="0 0 24 24">
+          <rect class="box" x="1.5" y="7" width="5.5" height="10" rx="1.5"/>
+          <rect class="box" x="9.25" y="7" width="5.5" height="10" rx="1.5"/>
+          <rect class="box" x="17" y="7" width="5.5" height="10" rx="1.5"/>
+          <path class="gap" d="M8.1 9.5v5M15.9 9.5v5"/>
+        </svg>
+        <span>Space<br>horizontal</span>
+      </button>
+      <button type="button" id="spaceCol" class="op" title="Hold the outer edges, set every gap to the vertical gutter">
+        <svg viewBox="0 0 24 24">
+          <rect class="box" x="7" y="1.5" width="10" height="5.5" rx="1.5"/>
+          <rect class="box" x="7" y="9.25" width="10" height="5.5" rx="1.5"/>
+          <rect class="box" x="7" y="17" width="10" height="5.5" rx="1.5"/>
+          <path class="gap" d="M9.5 8.1h5M9.5 15.9h5"/>
+        </svg>
+        <span>Space<br>vertical</span>
+      </button>
+    </div>
+    <div class="pair pair--split">
+      <button type="button" id="fillRow" class="op" title="Span the left and right page margins">
+        <svg viewBox="0 0 24 24">
+          <path class="rule" d="M1.5 3v18M22.5 3v18"/>
+          <rect class="box" x="4.5" y="7" width="6" height="10" rx="1.5"/>
+          <rect class="box" x="13.5" y="7" width="6" height="10" rx="1.5"/>
+          <path class="arrow" d="M2.6 12h1.4M20 12h1.4"/>
+        </svg>
+        <span>Fill<br>horizontal</span>
+      </button>
+      <button type="button" id="fillCol" class="op" title="Span the top and bottom page margins">
+        <svg viewBox="0 0 24 24">
+          <path class="rule" d="M3 1.5h18M3 22.5h18"/>
+          <rect class="box" x="7" y="4.5" width="10" height="6" rx="1.5"/>
+          <rect class="box" x="7" y="13.5" width="10" height="6" rx="1.5"/>
+          <path class="arrow" d="M12 2.6v1.4M12 20v1.4"/>
+        </svg>
+        <span>Fill<br>vertical</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Position <em id="selCount"></em></h2>
+    <div class="field-row">
+      <span class="field-row__key">Origin</span>
+      <label class="num"><input type="text" inputmode="text" id="posX" placeholder="—" autocomplete="off" spellcheck="false"><span class="num__tag">X</span></label>
+      <label class="num"><input type="text" inputmode="text" id="posY" placeholder="—" autocomplete="off" spellcheck="false"><span class="num__tag">Y</span></label>
+    </div>
+    <div class="field-row">
+      <span class="field-row__key">Size</span>
+      <label class="num"><input type="text" inputmode="text" id="posW" placeholder="—" autocomplete="off" spellcheck="false"><span class="num__tag">W</span></label>
+      <label class="num"><input type="text" inputmode="text" id="posH" placeholder="—" autocomplete="off" spellcheck="false"><span class="num__tag">H</span></label>
+    </div>
+    <div class="trio">
+      <button type="button" id="copyPos" class="action action--quiet">Copy</button>
+      <button type="button" id="pastePos" class="action action--quiet" disabled>Paste position</button>
+      <button type="button" id="pasteSize" class="action action--quiet" disabled>Paste size</button>
+    </div>
+    <div class="cliprow" id="clipRow" hidden>
+      <em>held</em>
+      <em id="clipPos">&mdash;</em>
+      <em id="clipSize">&mdash;</em>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Corner radius</h2>
+    <div class="field-row">
+      <label class="num num--wide"><input type="number" id="radius" value="30" min="0" step="1"><span class="num__tag">px</span></label>
+      <div class="steps">
+        <button type="button" class="step" data-radius="0.5"><b>S</b><i id="lblS">15</i></button>
+        <button type="button" class="step" data-radius="1"><b>M</b><i id="lblM">30</i></button>
+        <button type="button" class="step" data-radius="2"><b>L</b><i id="lblL">60</i></button>
+      </div>
+    </div>
+    <button type="button" id="applyRadius" class="action">Apply</button>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Inset</h2>
+    <div class="field-row">
+      <label class="num num--wide"><input type="number" id="insetAmt" value="15" step="1"><span class="num__tag">px</span></label>
+      <div class="steps">
+        <button type="button" class="step" data-inset="top" title="Move down, away from the top"><b>T</b></button>
+        <button type="button" class="step" data-inset="left" title="Move right, away from the left"><b>L</b></button>
+        <button type="button" class="step" data-inset="right" title="Move left, away from the right"><b>R</b></button>
+        <button type="button" class="step" data-inset="bottom" title="Move up, away from the bottom"><b>B</b></button>
+      </div>
+    </div>
+    <p class="hint">Moves the selection in from that side. Negative values move it out.</p>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Fill</h2>
+    <!-- Swatches are drawn by taskpane.js from CONFIG.swatches. -->
+    <div class="swatches" id="swatchesMain"></div>
+    <div class="swatches-more">
+      <span class="swatches-more__label">More</span>
+      <div class="swatches-more__dots" id="swatchesMore"></div>
+    </div>
+    <div class="field-row range-row">
+      <span class="field-row__key">Alpha</span>
+      <input type="range" id="alpha" class="range" min="0" max="100" step="1" value="0">
+      <span class="range__val" id="alphaVal">0%</span>
+    </div>
+    <button type="button" id="noStroke" class="action action--quiet action--spaced">Remove stroke</button>
+  </section>
+
+  <section class="panel">
+    <h2 class="eyebrow">Generate boxes</h2>
+    <div class="field-row">
+      <span class="field-row__key">Grid</span>
+      <label class="num"><input type="number" id="cols" value="3" min="1" max="24" step="1"><span class="num__tag">col</span></label>
+      <span class="times">&times;</span>
+      <label class="num"><input type="number" id="rows" value="1" min="1" max="24" step="1"><span class="num__tag">row</span></label>
+      <label class="swatch" title="Fill colour for generated boxes">
+        <input type="color" id="fill">
+      </label>
+    </div>
+    <button type="button" id="makeGrid" class="action">Generate <span id="gridCount">3</span> boxes</button>
+    <button type="button" id="makeFooter" class="action action--quiet action--spaced">Insert footer</button>
+  </section>
+
+  <footer class="status" id="status" role="status" aria-live="polite">Select a shape to begin.</footer>
+
+</main>
+
+<script src="taskpane.js"></script>
+</body>
+</html>
